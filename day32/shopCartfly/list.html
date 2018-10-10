@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<link rel="stylesheet" href="main.css" />
+		<link rel="stylesheet" href="style/common.css" />
+		<link rel="stylesheet" href="style/pagination.css" />
+		<script src="jquery.min.js"></script>
+		<script src="cookie.js"></script>
+		<!--<script src="jquery.cookie.js"></script>-->
+		<script src="jquery.pagination.js"></script>
+		<style>
+			.header{
+				height: 40px;
+				width: 900px;
+				margin: 0 auto 50px;
+			}
+			.sp{
+				position: absolute;
+				top: 200px;
+				right: 0;
+				width: 80px;
+				height: 50px;
+			}
+		</style>
+	</head>
+	<body>		 
+		
+		<div class="nav2 clearfix">
+			<!--<span>小米手机</span>-->
+		</div>		
+		<ul class="shoplist clearfix" style="position: relative;">
+			<!--<li>
+				<a href="page.html">
+					<img src="img/1.jpg" alt="" />
+					<p>小米1</p>
+					<p>890</p>
+				</a>
+				<button>加入购物车</button>
+			</li>-->
+		</ul>
+		<div class="M-box" style="margin-left: 300px;"></div>
+		<button class="sp" />
+			<a href="shopcar.html">购物车</a>
+			<span id="shopNum">0</span>
+		</button>
+	</body>
+</html>
+<script type="text/javascript">
+	var index = 1;//页码
+	var pageNum = 4;//每页的数据量
+	$.ajax({
+		type:"get",
+		url:"data.json",
+		async:true,
+		success : function(arr){
+			showData(arr,index);
+			
+			//计算总页数 ： 
+			var  pageTotal = Math.ceil(arr.length/pageNum);
+			//分页插件
+			$(".M-box").pagination({
+				pageCount:pageTotal,
+				keepShowPN : true,
+				callback : function(api){
+					//获取点击的控件页码
+					index = api.getCurrent();
+					//点击分页控件时  使用ajax获取服务器的数据
+					$.getJSON("data.json",function(arr){
+						  showData(arr,index); 
+					})
+				}
+			})
+		}
+	});
+	//封装一个函数 功能是根据页面获取分页后的数据
+	function showData(arr,index){
+		var conStr = "";
+		for( var i = (index-1)*pageNum ; i < index*pageNum ; i++ ){
+			var pro = arr[i];
+			if( i < arr.length ){//解决最后一页bug（下标越界）
+				conStr += `<li>
+								<img src="img/${pro.src}" alt="" />
+								<p>${ pro.name }</p>
+								<p>${ pro.price }</p>
+								<button>购买</button>
+							</li>`;
+			}
+		}
+		$(".shoplist").html( conStr );
+	}
+</script>

@@ -1,0 +1,64 @@
+@charset "utf-8";
+@import "public";
+//定义一个变量
+$color:blue;
+
+h1,h2,h3{
+    color:$color;
+}
+
+//代码重用(函数)
+//使用. 定义一个类   然后使用 @extend 调用这个类（缺点：不能指定参数）
+.public{
+    width: 960px;
+    margin:0 auto;
+}
+
+//使用@mixin 定义一个代码块  
+@mixin common($h:90px,$w:960px){
+    width: $w;
+    margin:0 auto;
+    height:$h;
+}
+#main{
+    @include common(89px,88px);
+}
+
+#header{
+    @include common;
+}
+//sass中的嵌套
+#nav{
+    @extend .public;
+    height: 50px;
+    ul{
+        margin-left: 40px;
+        li{
+            float: left;
+            padding:  0 10px;
+            a{
+                color:#000;
+                &:hover{
+                    color: red;
+                }
+            }
+        }
+    }
+}
+
+//if结构
+$flag:false;
+@if $flag{
+    p{
+        color:red;
+    }
+}@else{
+    p{
+        color:blue;
+    }
+}
+
+@for $i from 1 through 3 {
+  .item-#{$i } { width: 2em * $i ; }  
+}
+//.item-1  .item-2  .item-3
